@@ -4,10 +4,10 @@ locals {
   awscc_provider_version = "1.36.0"
   aws_region             = "ap-northeast-1"
 
-  path_parts = reverse(split("/", path_relative_to_include()))
+  environment_vars = read_terragrunt_config(find_in_parent_folders("env.hcl"))
 
   project     = "terragrunt-test"
-  environment = local.path_parts[1]
+  environment = local.environment_vars.locals.environment
   name_prefix = "${local.project}-${local.environment}"
 
   tags = {
@@ -23,49 +23,45 @@ locals {
   ]
 }
 
-inputs = {
-  name_prefix = local.name_prefix
-}
-
 remote_state {
   backend = "s3"
 
   config = {
-    region  = local.aws_region
-    bucket  = "${local.name_prefix}-state"
-    key     = "${path_relative_to_include()}/terraform.tfstate"
+    region = local.aws_region
+    bucket = "${local.name_prefix}-state"
+    key = "${path_relative_to_include()}/terraform.tfstate"
     encrypt = true
   }
 
   generate = {
-    path      = "backend.tf"
+    path = "_backend.tf"
     if_exists = "overwrite_terragrunt"
   }
 }
 
-generate "versions" {
-  path      = "versions.tf"
-  if_exists = "overwrite"
-  contents  = <<EOT
-    terraform {
-      required_version = "${local.terraform_version}"
+# generate "versions" {
+#   path      = "_versions.tf"
+#   if_exists = "overwrite_terragrunt"
+#   contents  = <<EOT
+#     terraform {
+#       required_version = "${local.terraform_version}"
 
-      required_providers {
-        aws = {
-          source  = "hashicorp/aws"
-          version = "${local.aws_provider_version}"
-        }
-        awscc = {
-          source  = "hashicorp/awscc"
-          version = "${local.awscc_provider_version}"
-        }
-      }
-    }
-  EOT
-}
+#       required_providers {
+#         aws = {
+#           source  = "hashicorp/aws"
+#           version = "${local.aws_provider_version}"
+#         }
+#         awscc = {
+#           source  = "hashicorp/awscc"
+#           version = "${local.awscc_provider_version}"
+#         }
+#       }
+#     }
+#   EOT
+# }
 
 generate "providers" {
-  path      = "providers.tf"
+  path      = "_providers.tf"
   if_exists = "overwrite_terragrunt"
   contents  = <<EOT
     provider "aws" {
@@ -97,3 +93,11 @@ generate "providers" {
     }
   EOT
 }
+
+# inputs = merge(
+#   {
+#     project = local.project
+#     name_prefix = local.name_prefix
+#   },
+#   local.environment_vars.locals,
+#   )

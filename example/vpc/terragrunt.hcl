@@ -18,7 +18,7 @@ dependency "data" {
   mock_outputs = {
     aws_availability_zone_names = ["ap-northeast-1x", "ap-northeast-1y", "ap-northeast-1z"]
   }
-  mock_outputs_allowed_terraform_commands = ["init", "plan", "validate"]
+  mock_outputs_allowed_terraform_commands = ["init", "plan", "validate", "validate-inputs"]
 }
 
 terraform {

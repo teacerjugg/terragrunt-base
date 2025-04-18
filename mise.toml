@@ -1,6 +1,7 @@
 [env]
 _.file = ".envrc"
 
+TF_PLUGIN_CACHE_DIR = "{{ env.HOME }}/.terraform.d/plugin-cache"
 TG_STRICT_CONTROL = "root-terragrunt-hcl"
 
 [tools]
@@ -17,6 +18,9 @@ trivy = "0.61.0"
 postinstall = "pre-commit install"
 
 [tasks.clean]
-description = "Delete terragrunt cache directories"
-run = 'find . -type d -name ".terragrunt-cache" -prune -exec rm -rf {} \;'
+description = "Delete terragrunt cache directories and terraform providers directories"
+run = [
+  'find . -type d -name ".terragrunt-cache" -prune -exec rm -rf {} \;',
+  'find . -type d -name ".terraform" -prune -exec rm -rf {} \;',
+]
 alias = "cl"
