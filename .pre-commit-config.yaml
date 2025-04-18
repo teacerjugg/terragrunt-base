@@ -34,4 +34,4 @@ repos:
       - id: terraform_tflint
       - id: terraform_trivy
       - id: terragrunt_validate
-      - id: terragrunt_valid_inputs
+      - id: terragrunt_validate_inputs
