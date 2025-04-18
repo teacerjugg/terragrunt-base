@@ -39,27 +39,6 @@ remote_state {
   }
 }
 
-# generate "versions" {
-#   path      = "_versions.tf"
-#   if_exists = "overwrite_terragrunt"
-#   contents  = <<EOT
-#     terraform {
-#       required_version = "${local.terraform_version}"
-
-#       required_providers {
-#         aws = {
-#           source  = "hashicorp/aws"
-#           version = "${local.aws_provider_version}"
-#         }
-#         awscc = {
-#           source  = "hashicorp/awscc"
-#           version = "${local.awscc_provider_version}"
-#         }
-#       }
-#     }
-#   EOT
-# }
-
 generate "providers" {
   path      = "_providers.tf"
   if_exists = "overwrite_terragrunt"
