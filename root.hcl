@@ -30,6 +30,7 @@ remote_state {
     region = local.aws_region
     bucket = "${local.name_prefix}-state"
     key = "${path_relative_to_include()}/terraform.tfstate"
+    use_lockfile = true
     encrypt = true
   }
 
