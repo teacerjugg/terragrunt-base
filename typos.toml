@@ -14,7 +14,7 @@ check-file = true
 unicode = true
 ignore-hex = true
 identifier-leading-digits = false
-locale = "en-us" # アメリカ英語を基準とする
+locale = "en-us"
 extend-ignore-identifiers-re = []
 extend-ignore-words-re = []
 extend-ignore-re = []
@@ -34,3 +34,11 @@ stap = "stap"
 ot = "ot"
 
 [type.sh.extend-words]
+
+[type.sql]
+extend-glob = ["*.sql"]
+check-file = false
+
+[type.tftpl]
+extend-glob = ["*.toml.tftpl"]
+check-file = false

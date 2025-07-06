@@ -1,10 +1,8 @@
 locals {
-  terraform_version      = "1.11.4"
-  aws_provider_version   = "5.94.1"
-  awscc_provider_version = "1.36.0"
-  aws_region             = "ap-northeast-1"
+  aws_region = "ap-northeast-1"
 
   environment_vars = read_terragrunt_config(find_in_parent_folders("env.hcl"))
+  secret_vars      = try(yamldecode(sops_decrypt_file(find_in_parent_folders("secrets.yml"))), {})
 
   project     = "terragrunt-test"
   environment = local.environment_vars.locals.environment
@@ -27,15 +25,15 @@ remote_state {
   backend = "s3"
 
   config = {
-    region = local.aws_region
-    bucket = "${local.name_prefix}-state"
-    key = "${path_relative_to_include()}/terraform.tfstate"
+    region       = local.aws_region
+    bucket       = "${local.name_prefix}-state"
+    key          = "${path_relative_to_include()}/terraform.tfstate"
     use_lockfile = true
-    encrypt = true
+    encrypt      = true
   }
 
   generate = {
-    path = "_backend.tf"
+    path      = "_backend.tf"
     if_exists = "overwrite_terragrunt"
   }
 }
@@ -73,11 +71,3 @@ generate "providers" {
     }
   EOT
 }
-
-# inputs = merge(
-#   {
-#     project = local.project
-#     name_prefix = local.name_prefix
-#   },
-#   local.environment_vars.locals,
-#   )

@@ -1,6 +1,7 @@
 [env]
 TF_PLUGIN_CACHE_DIR = "{{ env.HOME }}/.terraform.d/plugin-cache"
 TG_STRICT_CONTROL = "root-terragrunt-hcl"
+TG_NO_AUTO_INIT = "true"
 
 [tools]
 terraform = "1.11.4"
