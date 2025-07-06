@@ -1,9 +1,10 @@
 locals {
-  vpc_cidr = "10.0.0.0/16"
+  vpc_cidr   = "10.0.0.0/16"
+  num_of_azs = 3
 }
 
 include "root" {
-  path = find_in_parent_folders("root.hcl")
+  path   = find_in_parent_folders("root.hcl")
   expose = true
 }
 
@@ -28,9 +29,9 @@ terraform {
 inputs = {
   name = "${include.root.locals.name_prefix}-vpc"
   cidr = local.vpc_cidr
-  azs = slice(dependency.data.outputs.aws_availability_zone_names, 0, 3)
+  azs  = slice(dependency.data.outputs.aws_availability_zone_names, 0, 3)
 
-  public_subnets   = [for i in range(0, 3) : cidrsubnet(local.vpc_cidr, 4, i)]
-  private_subnets  = [for i in range(3, 6) : cidrsubnet(local.vpc_cidr, 4, i)]
-  database_subnets = [for i in range(6, 9) : cidrsubnet(local.vpc_cidr, 4, i)]
+  public_subnets   = [for i in range(0, 0 + local.num_of_azs) : cidrsubnet(local.vpc_cidr, 4, i)]
+  private_subnets  = [for i in range(3, 3 + local.num_of_azs) : cidrsubnet(local.vpc_cidr, 4, i)]
+  database_subnets = [for i in range(6, 6 + local.num_of_azs) : cidrsubnet(local.vpc_cidr, 4, i)]
 }
